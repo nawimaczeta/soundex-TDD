@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <algorithm>
+#include <vector>
 #include "gmock/gmock.h"
 
 int main(int argc, char** argv)
@@ -23,7 +25,7 @@ public:
 	{}
 
 	std::string get() const	{
-		std::string result{ _padding(_head() + _tail()) };
+		std::string result{ _padding(_head() + _removeChars(_tail())) };
 		return result;
 	}
 
@@ -44,6 +46,18 @@ private:
 			paddingSize = 4 - phrase.size();
 		}
 		return phrase + std::string(paddingSize, '0');
+	}
+
+	std::string _removeChars(std::string & phrase) const {
+		const std::vector<char> CHARS_TO_DELATE{ 'a', 'e', 'h', 'i', 'o', 'u', 'w', 'y' };
+		std::string res;
+		res.reserve(phrase.size());
+
+		std::copy_if(begin(phrase), end(phrase), std::back_inserter(res), [&](const char &c) {
+			return (std::find(cbegin(CHARS_TO_DELATE), cend(CHARS_TO_DELATE), c) == cend(CHARS_TO_DELATE));
+		});
+
+		return res;
 	}
 };
 
@@ -66,15 +80,15 @@ TEST(ASoundex, AddsThreeZerosPaddingWhenOutputStringSizeIs1) {
 }
 
 TEST(ASoundex, AddsThreeZerosPaddingWhenOutputStringSizeIs2) {
-	Soundex soundex("bf");
+	Soundex soundex("cf");
 
 	ASSERT_THAT(soundex.get(), EndsWith("00"));
 }
 
-TEST(ASoundex, DISABLED_RemovesCharsAEHIOUWYFromOutput) {
-	Soundex soundex("caehiouwy");
+TEST(ASoundex, RemovesCharsAEHIOUWYFromOutput) {
+	Soundex soundex("daehiouwy");
 
-	ASSERT_THAT(soundex.get(), StrEq("c000"));
+	ASSERT_THAT(soundex.get(), StrEq("d000"));
 }
 
 
