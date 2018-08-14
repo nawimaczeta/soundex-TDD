@@ -12,7 +12,7 @@ namespace StringUtils {
 		return str.substr(position);
 	}
 
-	std::string removeChars(const std::string & str, const vector<char> & chars) {
+	std::string removeChars(const std::string & str, const CharVector & chars) {
 		std::string res;
 		res.reserve(str.size());
 
