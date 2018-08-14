@@ -118,5 +118,11 @@ TEST(ASoundex, AcceptsUpperCase) {
 	ASSERT_THAT(soundex.get(), StrEq("f345"));
 }
 
+TEST(ASoundex, OmitsNonAlphabetisc) {
+	Soundex soundex("g!@#$%^&*()");
+
+	ASSERT_THAT(soundex.get(), StrEq("g000"));
+}
+
 
 
