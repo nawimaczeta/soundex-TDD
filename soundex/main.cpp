@@ -23,7 +23,7 @@ public:
 	{}
 
 	std::string get() const	{
-		return _head() + "asd";
+		return _head() + "000";
 	}
 
 private:
@@ -46,7 +46,7 @@ TEST(ASoundex, GeneratesOutputThatFirstLeterOfInputIsTheSameAsFirstLetterInInput
 	ASSERT_THAT(soundex.get(), StartsWith("q"));
 }
 
-TEST(ASoundex, DISABLED_AddsZeroPaddingWhenOutputStringSizeIsSmallerThen4) {
+TEST(ASoundex, AddsZeroPaddingWhenOutputStringSizeIsSmallerThen4) {
 	Soundex soundex("b");
 
 	ASSERT_THAT(soundex.get(), StrEq("b000"));
