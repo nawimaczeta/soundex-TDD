@@ -26,7 +26,10 @@ public:
 
 	std::string get() const	{
 		std::string result{ 
-			_padding(_trim(StringUtils::head(_phrase, 1) + StringUtils::removeChars(StringUtils::tail(_phrase, 1), CHARS_TO_REMOVE), 4)) };
+			_padding(StringUtils::trim(
+				StringUtils::head(_phrase, 1) + 
+				StringUtils::removeChars(StringUtils::tail(_phrase, 1), CHARS_TO_REMOVE), 4)) 
+		};
 		return result;
 	}
 
@@ -40,10 +43,6 @@ private:
 			paddingSize = 4 - phrase.size();
 		}
 		return phrase + std::string(paddingSize, '0');
-	}
-
-	std::string _trim(std::string & str, size_t newSize) const {
-		return StringUtils::head(str, newSize);
 	}
 };
 

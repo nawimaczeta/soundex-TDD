@@ -12,14 +12,18 @@ namespace StringUtils {
 		return str.substr(position);
 	}
 
-	std::string removeChars(const std::string & phrase, const vector<char> & chars) {
+	std::string removeChars(const std::string & str, const vector<char> & chars) {
 		std::string res;
-		res.reserve(phrase.size());
+		res.reserve(str.size());
 
-		std::copy_if(begin(phrase), end(phrase), back_inserter(res), [&](const char &c) {
+		std::copy_if(begin(str), end(str), back_inserter(res), [&](const char &c) {
 			return (std::find(cbegin(chars), cend(chars), c) == cend(chars));
 		});
 
 		return res;
+	}
+
+	string trim(std::string & str, size_t newSize) {
+		return head(str, newSize);
 	}
 }
