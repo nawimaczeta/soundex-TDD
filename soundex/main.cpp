@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <iostream>
 #include "gmock/gmock.h"
 
 int main(int argc, char** argv)
@@ -13,6 +14,8 @@ int main(int argc, char** argv)
     return res;
 }
 
+using namespace testing;
+
 class Soundex {
 public:
 	Soundex(std::string phrase) :
@@ -20,16 +23,34 @@ public:
 	{}
 
 	std::string get() const	{
-		return "asbc";
+		return _head() + "asd";
 	}
 
 private:
 	std::string _phrase;
+
+	std::string _head() const {
+		return _phrase.substr(0, 1);
+	}
 };
 
-TEST(ASoundex, GeneratesOutputHasFourCharacter) {
+TEST(ASoundex, GeneratesOutputThatHasFourCharacter) {
 	Soundex soundex("asdfghjkl");
 
-	ASSERT_THAT(soundex.get(), ::testing::SizeIs(4));
+	ASSERT_THAT(soundex.get(), SizeIs(4));
 }
+
+TEST(ASoundex, GeneratesOutputThatFirstLeterOfInputIsTheSameAsFirstLetterInInput) {
+	Soundex soundex("qwer");
+
+	ASSERT_THAT(soundex.get(), StartsWith("q"));
+}
+
+TEST(ASoundex, DISABLED_AddsZeroPaddingWhenOutputStringSizeIsSmallerThen4) {
+	Soundex soundex("b");
+
+	ASSERT_THAT(soundex.get(), StrEq("b000"));
+}
+
+
 
