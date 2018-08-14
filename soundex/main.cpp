@@ -23,7 +23,8 @@ public:
 	{}
 
 	std::string get() const	{
-		return _head() + "000";
+		std::string result{ _padding(_head() + _tail()) };
+		return result;
 	}
 
 private:
@@ -31,6 +32,18 @@ private:
 
 	std::string _head() const {
 		return _phrase.substr(0, 1);
+	}
+
+	std::string _tail() const {
+		return _phrase.substr(1, 3);
+	}
+
+	std::string _padding(std::string & phrase) const {
+		size_t paddingSize = 0;
+		if (phrase.size() < 4) {
+			paddingSize = 4 - phrase.size();
+		}
+		return phrase + std::string(paddingSize, '0');
 	}
 };
 
@@ -46,10 +59,22 @@ TEST(ASoundex, GeneratesOutputThatFirstLeterOfInputIsTheSameAsFirstLetterInInput
 	ASSERT_THAT(soundex.get(), StartsWith("q"));
 }
 
-TEST(ASoundex, AddsZeroPaddingWhenOutputStringSizeIsSmallerThen4) {
+TEST(ASoundex, AddsThreeZerosPaddingWhenOutputStringSizeIs1) {
 	Soundex soundex("b");
 
-	ASSERT_THAT(soundex.get(), StrEq("b000"));
+	ASSERT_THAT(soundex.get(), EndsWith("000"));
+}
+
+TEST(ASoundex, AddsThreeZerosPaddingWhenOutputStringSizeIs2) {
+	Soundex soundex("bf");
+
+	ASSERT_THAT(soundex.get(), EndsWith("00"));
+}
+
+TEST(ASoundex, DISABLED_RemovesCharsAEHIOUWYFromOutput) {
+	Soundex soundex("caehiouwy");
+
+	ASSERT_THAT(soundex.get(), StrEq("c000"));
 }
 
 
