@@ -26,4 +26,11 @@ namespace StringUtils {
 	string trim(std::string & str, size_t newSize) {
 		return head(str, newSize);
 	}
+
+	string toUpper(const string & str)
+	{
+		std::string res;
+		transform(cbegin(str), cend(str), back_inserter(res), ::toupper);
+		return res;
+	}
 }
