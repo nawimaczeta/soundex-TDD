@@ -13,7 +13,6 @@ public:
 private:
 	const char NOT_A_DIGIT = '*';
 	const size_t TAIL_SIZE = 3;
-	static const map<char, char> CONVERT_MAP;
 	string _phrase;
 
 	string _padding(const string & phrase) const;

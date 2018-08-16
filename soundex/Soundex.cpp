@@ -75,8 +75,16 @@ bool Soundex::_isConversionDone(const string & currentDigest) const {
 }
 
 char Soundex::_convertChar(char c) const {
-	const auto it = CONVERT_MAP.find(c);
-	if (it != cend(CONVERT_MAP)) {
+	const map<char, char> CONVERTSION_MAP{
+		{ 'b', '1' },{ 'f', '1' },{ 'p', '1' },{ 'v', '1' },
+		{ 'c', '2' },{ 'g', '2' },{ 'j', '2' },{ 'k', '2' },{ 'q', '2' },{ 's', '2' },{ 'x', '2' },{ 'z', '2' },
+		{ 'd', '3' },{ 't', '3' },
+		{ 'l', '4' },
+		{ 'm', '5' },{ 'n', '5' },
+		{ 'r', '6' }
+	};
+	const auto it = CONVERTSION_MAP.find(c);
+	if (it != cend(CONVERTSION_MAP)) {
 		return (*it).second;
 	}
 	else {
@@ -84,11 +92,3 @@ char Soundex::_convertChar(char c) const {
 	}
 }
 
-const map<char, char> Soundex::CONVERT_MAP{
-	{ 'b', '1' },{ 'f', '1' },{ 'p', '1' },{ 'v', '1' },
-	{ 'c', '2' },{ 'g', '2' },{ 'j', '2' },{ 'k', '2' },{ 'q', '2' },{ 's', '2' },{ 'x', '2' },{ 'z', '2' },
-	{ 'd', '3' },{ 't', '3' },
-	{ 'l', '4' },
-	{ 'm', '5' },{ 'n', '5' },
-	{ 'r', '6' }
-};
