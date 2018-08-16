@@ -51,37 +51,57 @@ private:
 	}
 
 	std::string _encodeTail(const std::string & tail) const {
-		return _padding(_convertChars(tail));
+		return _padding(_convertInput(tail));
 	}
 
-	std::string _convertChars(const std::string & str) const {
+	std::string _convertInput(const std::string & str) const {
 		std::string res;
-		res.reserve(str.size());
-		StringUtils::CharVector usedDigits;
 
-		for (const auto & c : str) {
-			const auto & it = CONVERT_MAP.find(tolower(c));
-			if (it != cend(CONVERT_MAP)) {
-				res += _ommitDuplicated(_convertChar(tolower(c)), usedDigits);
+		for (auto const & c : str) {
+			if (_isConversionDone(res)) {
+				break;
+			}
+
+			std::string digit = _convertChar(tolower(c));
+			if (_isValid(digit, res)) {
+				res += digit;
 			}
 		}
 
 		return res;
 	}
 
-	std::string _ommitDuplicated(char digit, StringUtils::CharVector & usedDigits) const {
-		std::string res;
-		if (std::find(begin(usedDigits), end(usedDigits), digit) == end(usedDigits)) {
-			res = digit;
-			usedDigits.push_back(digit);
+	bool _isValid(const std::string & digit, const std::string & currentDigest) const {
+		if ((digit.size() == 1) && !_isDuplicate(digit.at(0), currentDigest)) {
+			return true;
 		}
-		return res;
+		else {
+			return false;
+		}
 	}
 
-	char _convertChar(char c) const {
-		char res = 0;
+	bool _isDuplicate(char digit, const std::string & currentDigest) const {
+		if (std::find(begin(currentDigest), end(currentDigest), digit) == end(currentDigest)) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 
-		const auto & it = CONVERT_MAP.find(c);
+	bool _isConversionDone(const std::string & currentDigest) const {
+		if (currentDigest.size() < 3) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+
+	std::string _convertChar(char c) const {
+		std::string res;
+
+		const auto it = CONVERT_MAP.find(c);
 		if (it != cend(CONVERT_MAP)) {
 			res = (*it).second;
 		}
@@ -89,7 +109,6 @@ private:
 	}
 };
 
-const vector<char> Soundex::CHARS_TO_REMOVE{ 'a', 'e', 'h', 'i', 'o', 'u', 'w', 'y' };
 const std::map<char, char> Soundex::CONVERT_MAP{
 	{ 'b', '1' },{ 'f', '1' },{ 'p', '1' },{ 'v', '1' },
 	{ 'c', '2' },{ 'g', '2' },{ 'j', '2' },{ 'k', '2' },{ 'q', '2' },{ 's', '2' },{ 'x', '2' },{ 'z', '2' },
@@ -99,7 +118,7 @@ const std::map<char, char> Soundex::CONVERT_MAP{
 	{ 'r', '6' }
 };
 
-TEST(ASoundex, DISABLED_GeneratesOutputThatHasFourCharacter) {
+TEST(ASoundex, GeneratesOutputThatHasFourCharacter) {
 	Soundex soundex("asdfghjkl");
 
 	ASSERT_THAT(soundex.get(), SizeIs(4));
