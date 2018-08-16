@@ -62,3 +62,9 @@ TEST(ASoundex, RemovesDuplicateddigitsFromOutput) {
 
 	ASSERT_THAT(soundex.get(), StrEq("I456"));
 }
+
+TEST(ASoundex, DoesNotCombineDuplicateEncodingsSeparatedByVowels) {
+	Soundex soundex("jbob");
+
+	ASSERT_THAT(soundex.get(), StrEq("J110"));
+}

@@ -15,8 +15,8 @@ string Soundex::get() const {
 
 string Soundex::_padding(const string & phrase) const {
 	size_t paddingSize = 0;
-	if (phrase.size() < 3) {
-		paddingSize = 3 - phrase.size();
+	if (phrase.size() < TAIL_SIZE) {
+		paddingSize = TAIL_SIZE - phrase.size();
 	}
 	return phrase + string(paddingSize, '0');
 }
@@ -31,41 +31,42 @@ string Soundex::_encodeTail(const string & tail) const {
 
 string Soundex::_convertInput(const string & str) const {
 	string res;
+	char previousDigit = NOT_A_DIGIT;
 
 	for (auto const & c : str) {
 		if (_isConversionDone(res)) {
 			break;
 		}
 
-		string digit = _convertChar(tolower(c));
-		if (_isValid(digit, res)) {
+		char digit = _convertChar(tolower(c));
+		if (_isValid(digit, previousDigit)) {
 			res += digit;
 		}
+		previousDigit = digit;
 	}
 
 	return res;
 }
 
-bool Soundex::_isValid(const string & digit, const string & currentDigest) const {
-	if ((digit.size() == 1) && !_isDuplicate(digit.at(0), currentDigest)) {
-		return true;
+bool Soundex::_isValid(char currentDigit, char previousDigit) const {
+	if (currentDigit == NOT_A_DIGIT || _isDuplicate(currentDigit, previousDigit)) {
+		return false;
 	}
 	else {
-		return false;
+		return true;
 	}
 }
 
-bool Soundex::_isDuplicate(char digit, const string & currentDigest) const {
-	if (find(begin(currentDigest), end(currentDigest), digit) == end(currentDigest)) {
+bool Soundex::_isDuplicate(char currentDigit, char previousDigit) const {
+	if (currentDigit != previousDigit) {
 		return false;
-	}
-	else {
+	} else {
 		return true;
 	}
 }
 
 bool Soundex::_isConversionDone(const string & currentDigest) const {
-	if (currentDigest.size() < 3) {
+	if (currentDigest.size() < TAIL_SIZE) {
 		return false;
 	}
 	else {
@@ -73,14 +74,14 @@ bool Soundex::_isConversionDone(const string & currentDigest) const {
 	}
 }
 
-string Soundex::_convertChar(char c) const {
-	string res;
-
+char Soundex::_convertChar(char c) const {
 	const auto it = CONVERT_MAP.find(c);
 	if (it != cend(CONVERT_MAP)) {
-		res = (*it).second;
+		return (*it).second;
 	}
-	return res;
+	else {
+		return NOT_A_DIGIT;
+	}
 }
 
 const map<char, char> Soundex::CONVERT_MAP{

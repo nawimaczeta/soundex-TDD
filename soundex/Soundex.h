@@ -11,6 +11,8 @@ public:
 	string get() const;
 
 private:
+	const char NOT_A_DIGIT = '*';
+	const size_t TAIL_SIZE = 3;
 	static const map<char, char> CONVERT_MAP;
 	string _phrase;
 
@@ -18,8 +20,8 @@ private:
 	string _encodeHead(const string & head) const;
 	string _encodeTail(const string & tail) const;
 	string _convertInput(const string & str) const;
-	bool _isValid(const string & digit, const string & currentDigest) const;
-	bool _isDuplicate(char digit, const string & currentDigest) const;
+	bool _isValid(char currentDigit, char previousDigit) const;
+	bool _isDuplicate(char currentDigit, char previousDigit) const;
 	bool _isConversionDone(const string & currentDigest) const;
-	string _convertChar(char c) const;
+	char _convertChar(char c) const;
 };
